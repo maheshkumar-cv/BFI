@@ -23,7 +23,7 @@ The method enhances low-light images by:
 Only the intensity channel is modified — hue and saturation are carried
 through unchanged.
 
-**Live demo:** https://bfi.streamlit.app
+**Live demo:** https://bipolar.streamlit.app
 
 ## Article
 
@@ -105,6 +105,9 @@ Opens a browser tab where you can:
 - Compare the original and enhanced intensity channels with linear- and
   log-scale histograms.
 - View and download the final enhanced RGB image.
+
+A hosted version of this demo is live at **https://bipolar.streamlit.app** — no
+installation needed.
 
 ## Using the library in your own code
 
