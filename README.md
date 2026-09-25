@@ -39,10 +39,10 @@ See [Citation](#citation) below for the full BibTeX entry.
 
 | File | Description |
 |---|---|
-| `bipolar_enhance.py` | Self-contained pipeline: `rgb2hsi`/`hsi2rgb`/`entropy`/`clahe`/`histeq`/`bpdfhe`, the positive/negative generators (Yager- and Sugeno-style), PCA/simple-average fusion, the PSNR/correlation/SSIM objectives, the seven `bfi*` variants, and `bfi_general` (choose positive generator, negative generator, and post-process independently). Also runnable as a script. |
-| `app_bipolar.py` | Interactive Streamlit demo that visualizes every stage of the pipeline — H, S, I channels, the negamma search curve, the enhanced intensity, and the final image — with independent dropdowns for the positive membership function, negative membership function, and post-process step. |
+| `bfi.py` | Self-contained pipeline: `rgb2hsi`/`hsi2rgb`/`entropy`/`clahe`/`histeq`/`bpdfhe`, the positive/negative generators (Yager- and Sugeno-style), PCA/simple-average fusion, the PSNR/correlation/SSIM objectives, the seven `bfi*` variants, and `bfi_general` (choose positive generator, negative generator, and post-process independently). Also runnable as a script. |
+| `appr.py` | Interactive Streamlit demo that visualizes every stage of the pipeline — H, S, I channels, the negamma search curve, the enhanced intensity, and the final image — with independent dropdowns for the positive membership function, negative membership function, and post-process step. |
 | `requirements.txt` | Python dependencies. |
-| `sample_image.jpg` | *(optional)* Bundle your own low-light test image under this name and both scripts will use it as their default input. |
+| `sample.png` | *(optional)* Bundle your own low-light test image under this name and both scripts will use it as their default input. |
 
 ### What's not ported, and why
 
@@ -51,25 +51,13 @@ See [Citation](#citation) below for the full BibTeX entry.
 - **`piqe`** is fully ported and self-contained (needs `opencv-python` in
   addition to the base requirements) — no external data file required.
 - **`niqe`** is ported too, but needs a pretrained natural-scene-statistics
-  model file, `modelparameters.mat`, placed next to `bipolar_enhance.py`.
-  That file is third-party trained data with its own citation/license terms
-  (from Mittal, Soundararajan & Bovik's LIVE Lab release at UT Austin), so
-  it isn't bundled in this repo. Calling `bp.niqe(...)` without it raises a
-  `FileNotFoundError` explaining where to get one; see `bp.NIQE_MODEL_HELP`.
+  model file, `modelparameters.mat`, placed next to `bfi.py`.
+  
 
 Both are *no-reference* metrics — they score the enhanced image alone, not
 against the original — and both are lower-is-better distortion scores, the
 opposite sense from PSNR/correlation/SSIM. The demo and the negamma search
 handle that automatically when you pick `piqe`/`niqe` as the objective.
-
-`bfi_bpdfhe` (MATLAB's `fcnBPDFHE`, brightness-preserving dynamic fuzzy
-histogram equalization) **is** ported, from a user-supplied Python
-implementation: it builds a fuzzy histogram with a triangular membership
-function, finds its local maxima to split the intensity range into
-sub-histograms, then equalizes and rescales each sub-histogram. The
-triangular membership itself is reimplemented locally (matching
-`skfuzzy.trimf` numerically) so the module doesn't need `scikit-fuzzy` as a
-dependency.
 
 ## Installation
 
@@ -79,14 +67,12 @@ cd BFI
 pip install -r requirements.txt
 ```
 
-Requires Python 3.9+.
-
 ## Usage
 
 ### Command line
 
 ```bash
-# Uses sample_image.jpg in this folder, the bfi variant, by default
+# Uses sample.png in this folder, the bfi variant, by default
 # gamma defaults to 0.4 for Yager-positive variants (bfi, nsugeno, clahe, he)
 # and to 25 for Sugeno-positive variants (psugeno, pnsugeno)
 python bfi.py
@@ -110,7 +96,7 @@ streamlit run app.py
 ```
 
 Opens a browser tab where you can:
-- Upload your own image (or use the bundled `sample_image.jpg` / a stock
+- Upload your own image (or use the bundled `sample.png` / a stock
   fallback image if none is present).
 - Choose the variant, fix γ for the positive image, pick the fusion method
   and the scoring objective.
